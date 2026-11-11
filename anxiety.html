@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不安から探す｜ラーメンナビ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="subhero">
+  <div class="inner">
+    <a class="back" href="index.html">← トップへ戻る</a>
+    <small>ANXIETY</small>
+    <h1 id="title"></h1>
+    <p id="desc"></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="steps-box">
+    <h3 id="stepsTitle" style="margin:0"></h3>
+    <ol id="steps"></ol>
+    <p style="margin:14px 0 0"><a href="index.html#guide" style="color:var(--red)">8ステップの入店ガイドを見る →</a></p>
+  </div>
+  <h2 style="margin:0 0 16px">関連するお店</h2>
+  <div id="list" class="store-grid"></div>
+</div>
+
+<footer>© ラーメンナビ ｜ 初めての一杯を、迷わず楽しむためのガイド</footer>
+
+<script src="stores.js"></script>
+<script>
+const ANXIETY = {
+  order: {
+    title: "注文方法が分からない",
+    desc: "食券制と口頭注文の違いと、いつ何をすればいいかを確認できます。",
+    stepsTitle: "注文の流れ",
+    steps: [
+      "食券制：入口の食券機で基本メニューを選ぶ（迷ったら一番上）",
+      "食券は席に着く前に買い、着席後に店員さんへ渡す",
+      "口頭注文：着席後に店員さんへ「醤油ラーメン、普通盛りで」と伝える"
+    ],
+    sort: SORTS.entry
+  },
+  regular: {
+    title: "常連客が多そう",
+    desc: "常連の割合が少ないお店から並べています。",
+    stepsTitle: "常連が多い店で気をつけたいこと",
+    steps: [
+      "会話は控えめに、静かに食べるのが基本",
+      "わからないことは店員さんに直接聞けばOK",
+      "独自のコールや注文は、店員さんに聞かれてから伝える"
+    ],
+    sort: SORTS.regular
+  },
+  queue: {
+    title: "行列が不安",
+    desc: "行列の目安が短いお店から並べています。",
+    stepsTitle: "並び方・待ち方",
+    steps: [
+      "入口の列の最後尾を探し、係の人がいれば声をかける",
+      "入口で人数を伝える店が多い（「1名です」でOK）",
+      "待ち時間の目安は店舗の詳細で事前に確認できる"
+    ],
+    sort: SORTS.queue
+  },
+  seat: {
+    title: "座る場所が分からない",
+    desc: "店員さんの案内に従うのが基本です。",
+    stepsTitle: "席への案内・着席",
+    steps: [
+      "入店したら店員さんの声かけを待つ",
+      "空いている席に自分で座らない",
+      "「どこに座ればいいですか？」と聞けば大丈夫"
+    ],
+    sort: SORTS.entry
+  }
+};
+
+const params = new URLSearchParams(location.search);
+const key = ANXIETY[params.get("key")] ? params.get("key") : "order";
+const a = ANXIETY[key];
+
+document.title = a.title + "｜ラーメンナビ";
+document.getElementById("title").textContent = a.title;
+document.getElementById("desc").textContent = a.desc;
+document.getElementById("stepsTitle").textContent = a.stepsTitle;
+document.getElementById("steps").innerHTML = a.steps.map(s => `<li>${esc(s)}</li>`).join("");
+
+renderCards([...stores].sort(a.sort), document.getElementById("list"));
+</script>
+</body>
+</html>

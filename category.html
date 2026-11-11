@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ジャンル別のお店｜ラーメンナビ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="subhero">
+  <div class="inner">
+    <a class="back" href="index.html">← トップへ戻る</a>
+    <small>GENRE</small>
+    <h1 id="title"></h1>
+    <p id="desc"></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="filters">
+    <a class="chip" href="category.html?type=二郎系">二郎系</a>
+    <a class="chip" href="category.html?type=家系">家系</a>
+    <a class="chip" href="category.html?type=その他">その他</a>
+    <span class="count" id="count"></span>
+  </div>
+  <div id="list" class="store-grid"></div>
+</div>
+
+<footer>© ラーメンナビ ｜ 初めての一杯を、迷わず楽しむためのガイド</footer>
+
+<script src="stores.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const type = ["二郎系","家系","その他"].includes(params.get("type")) ? params.get("type") : "二郎系";
+
+const DESCS = {
+  "二郎系": "ボリュームと独自のコールが特徴。初めての方は注文の流れを事前に確認してから行くと安心です。",
+  "家系":   "豚骨醤油のスープと海苔・ほうれん草が定番。硬さや味の濃さを選べる店が多いです。",
+  "その他": "鶏白湯や醤油など、店ごとに個性のあるラーメン。初めての方にも入りやすい店が中心です。"
+};
+
+document.title = type + "のお店｜ラーメンナビ";
+document.getElementById("title").textContent = type;
+document.getElementById("desc").textContent = DESCS[type];
+
+// 入りやすさが高い順に表示
+const list = stores.filter(s => s.type === type).sort(SORTS.entry);
+renderCards(list, document.getElementById("list"));
+document.getElementById("count").textContent = list.length + "件";
+
+// 現在のジャンルのチップを強調
+document.querySelectorAll(".filters .chip").forEach(a => {
+  if(a.textContent === type) a.classList.add("on");
+});
+</script>
+</body>
+</html>

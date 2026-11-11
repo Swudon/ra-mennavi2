@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>初めてでも、迷わずラーメン店へ。</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="intro" aria-hidden="true">
+  <img src="images/logo-intro.png" alt="">
+</div>
+
+<header class="site-header">
+  <div class="header-brand">
+    <img src="images/a.png" alt="ラーメンナビ" class="brand-title">
+    <div class="brand-logo">
+      <img src="images/bowl.png" alt="" class="logo-bowl">
+      <img src="images/pattern.png" alt="" class="logo-pattern">
+    </div>
+  </div>
+</header>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="vtext">初めてでも、迷わずラーメン店へ。</p>
+  <div class="inner">
+    <div class="eyebrow">FIRST TIME GUIDE</div>
+    <h1>初めてでも、<br><em>迷わず</em>ラーメン店へ。</h1>
+    <p class="lead">入りやすさ・行列・注文方法・常連の多さを事前に確認。<br>「わからない」を減らして、一杯を楽しむためのガイドです。</p>
+    <a class="btn" href="#gallery">お店を探す</a>
+    <a class="btn ghost" href="#guide">入店の流れを見る</a>
+  </div>
+</section>
+
+<!-- 特徴バー -->
+<div class="features">
+  <div class="feat-grid">
+    <div class="feat"><b>入りやすさ</b><span>★で初心者向けの度合いが分かる</span></div>
+    <div class="feat"><b>行列の目安</b><span>混みやすさをあらかじめ確認</span></div>
+    <div class="feat"><b>注文方法</b><span>食券制・口頭注文の違いを解説</span></div>
+    <div class="feat"><b>利用者の体験</b><span>常連の多さや店内の雰囲気も把握</span></div>
+  </div>
+</div>
+
+<!-- ジャンル -->
+<section id="genres">
+  <div class="sec">
+    <h2>ジャンルから探す</h2>
+    <p class="lead">ジャンルごとのお店一覧ページへ移動します。</p>
+    <div class="genre-row">
+      <a class="genre" href="category.html?type=二郎系">
+        <img src="icons/jiro.png" alt="二郎系" onerror="this.style.visibility='hidden'">
+        <span class="name">二郎系</span>
+        <span class="desc">ボリュームと独自のコールが特徴</span>
+      </a>
+      <a class="genre" href="category.html?type=家系">
+        <img src="icons/iekei.png" alt="家系" onerror="this.style.visibility='hidden'">
+        <span class="name">家系</span>
+        <span class="desc">豚骨醤油と海苔・ほうれん草が定番</span>
+      </a>
+      <a class="genre" href="category.html?type=その他">
+        <img src="icons/other.png" alt="その他" onerror="this.style.visibility='hidden'">
+        <span class="name">その他</span>
+        <span class="desc">鶏白湯・醤油など店ごとの個性</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 入りやすさから探す -->
+<section id="search" style="padding-top:0">
+  <div class="sec">
+    <h2>入りやすさから探す</h2>
+    <p class="lead">初めての方が迷いにくい条件で、お店を絞り込めます。</p>
+    <div class="anx-grid">
+      <a class="anx" href="#gallery" data-ease="entry4">
+        <div class="q">★ 初心者向けのお店</div>
+        <div class="a">入りやすさ★4以上に絞る →</div>
+      </a>
+      <a class="anx" href="#gallery" data-ease="queue">
+        <div class="q">⏳ 行列が短めのお店</div>
+        <div class="a">待ち人数が少ない順に並べる →</div>
+      </a>
+      <a class="anx" href="#gallery" data-ease="regular">
+        <div class="q">🙋 常連が少なめのお店</div>
+        <div class="a">常連が少ない順に並べる →</div>
+      </a>
+      <a class="anx" href="#gallery" data-ease="order">
+        <div class="q">🎫 食券制のお店</div>
+        <div class="a">注文がシンプルな店に絞る →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- お店ギャラリー -->
+<section id="gallery" style="padding-top:0">
+  <div class="sec">
+    <h2>お店一覧</h2>
+    <p class="lead">カードをタップすると、ルールや座席などの詳細を確認できます。</p>
+    <div class="filters">
+  <select id="entrySel">
+    <option value="0">入りやすさ：すべて</option>
+    <option value="3">★3以上</option>
+    <option value="4">★4以上</option>
+  </select>
+  <select id="sort">
+    <option value="ease">入りやすさ順</option>
+    <option value="queue">行列が少ない順</option>
+    <option value="regular">常連が少ない順</option>
+    <option value="name">名前順</option>
+    <option value="distance">近い順</option>
+  </select>
+  <span class="count" id="count"></span>
+  </div>
+    <div id="storeList" class="store-grid"></div>
+  </div>
+</section>
+
+<!-- 入店ガイド（8ステップ） -->
+<section id="guide" style="background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="sec">
+    <h2>入店ガイド（8ステップ）</h2>
+    <p class="lead">来店から退店まで、流れに沿って確認できます。</p>
+    <div class="steps">
+      <div class="step"><div class="no">STEP 1</div><h4>到着</h4><p>外の列や案内板を確認。営業時間も事前にチェック。</p></div>
+      <div class="step"><div class="no">STEP 2</div><h4>並ぶ</h4><p>列の最後尾に並ぶ。係の人がいれば声をかける。</p></div>
+      <div class="step"><div class="no">STEP 3</div><h4>入店</h4><p>店員さんの声かけを待ってから入る。</p></div>
+      <div class="step"><div class="no">STEP 4</div><h4>注文</h4><p>食券制は入口で購入。口頭注文は着席後に伝える。</p></div>
+      <div class="step"><div class="no">STEP 5</div><h4>着席</h4><p>案内された席に座る。自分で好きな席を選ばない。</p></div>
+      <div class="step"><div class="no">STEP 6</div><h4>やりとり</h4><p>コールや追加注文は、聞かれてから伝えればOK。</p></div>
+      <div class="step"><div class="no">STEP 7</div><h4>食べる</h4><p>麺が伸びないうちに、早めに食べ進めるのがコツ。</p></div>
+      <div class="step"><div class="no">STEP 8</div><h4>退店</h4><p>食器はそのままでOKな店が多い。お礼を言って退店。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="sec">
+    <h2>よくある質問</h2>
+    <p class="lead">初めての方が気になりやすいポイントをまとめました。</p>
+    <details>
+      <summary>食券の買い方がわからない</summary>
+      <p>入口の食券機で、一番上の基本メニューを選ぶと迷いにくいです。ボタンを押す前に、金額と内容を確認しましょう。</p>
+    </details>
+    <details>
+      <summary>コールとは何ですか？</summary>
+      <p>二郎系で、野菜・脂・ニンニクなどの量を伝える独自の注文です。初めての方は無理に言わず、店員さんに聞かれてから答えればOKです。</p>
+    </details>
+    <details>
+      <summary>一人でも入れますか？</summary>
+      <p>多くのラーメン店はおひとり様が中心です。カウンター席が多いので、気軽に入れるお店が多くあります。</p>
+    </details>
+    <details>
+      <summary>残してもいいですか？</summary>
+      <p>量が多いお店もあるため、無理をせず、残すことを店員さんに伝えるのが安心です。</p>
+    </details>
+  </div>
+</section>
+
+<footer>© ラーメンナビ ｜ 初めての一杯を、迷わず楽しむためのガイド</footer>
+
+<script src="stores.js"></script>
+<script>
+(function () {
+  /* ===== イントロ演出 ===== */
+  const intro = document.getElementById("intro");
+  if (intro) {
+    if (sessionStorage.getItem("introShown")) {
+      intro.remove();
+    } else {
+      sessionStorage.setItem("introShown", "1");
+      setTimeout(() => {
+        intro.classList.add("fade-out");
+        setTimeout(() => intro.remove(), 600);
+      }, 1500);
+    }
+  }
+
+  /* ===== 要素 ===== */
+  const listEl = document.getElementById("storeList");
+  const countEl = document.getElementById("count");
+  const entrySel = document.getElementById("entrySel");
+  const sortSel = document.getElementById("sort");
+
+  const state = { entry: 0, order: "all", sort: "ease" };
+
+  /* ===== 絞り込み・並び替え・描画 ===== */
+  function applyFilter() {
+    let list = stores.filter(s =>
+      (state.order === "all" || s.order === state.order) &&
+      s.entry >= state.entry
+    );
+    list = [...list].sort(SORTS[state.sort] || SORTS.ease);
+    renderCards(list, listEl);
+    countEl.textContent = list.length + "件";
+  }
+
+  /* 入りやすさ */
+  entrySel.addEventListener("change", e => {
+    state.entry = Number(e.target.value);
+    applyFilter();
+  });
+
+  /* 並び替え（近い順は位置情報が必要） */
+  sortSel.addEventListener("change", async () => {
+    state.sort = sortSel.value;
+    if (state.sort === "distance" && !userLoc) {
+      try {
+        await getUserLocation();
+      } catch (e) {
+        alert("位置情報を取得できませんでした。ブラウザの位置情報の許可を確認してください。");
+        state.sort = "name";
+        sortSel.value = "name";
+      }
+    }
+    applyFilter();
+  });
+
+  /* 入りやすさから探す（リンク） */
+  function applyEase(key) {
+    // 基準をリセット
+    state.entry = 0;
+    state.order = "all";
+    state.sort = "ease";
+
+    // 選んだ基準だけ設定
+    if (key === "entry4") state.entry = 4;
+    if (key === "queue") state.sort = "queue";
+    if (key === "regular") state.sort = "regular";
+    if (key === "order") state.order = "食券制";
+
+    // 画面の表示を状態に合わせる
+    entrySel.value = String(state.entry);
+    sortSel.value = state.sort;
+
+    applyFilter();
+  }
+
+  document.querySelectorAll("[data-ease]").forEach(a => {
+    a.addEventListener("click", () => applyEase(a.dataset.ease));
+  });
+
+  /* 初回描画 */
+  applyFilter();
+})();
+</script>
+</body>
+</html>

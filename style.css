@@ -1,0 +1,258 @@
+:root{
+  --bg:#0e0b09; --panel:#1b1512; --line:#3a2c25;
+  --text:#f3ece6; --muted:#a89b92; --red:#e53935;
+  --hero-img: url("images/hero.jpg");   /* 背景画像。未設定でもグラデーションで表示されます */
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7}
+a{color:inherit}
+h1,h2,h3,h4{line-height:1.35}
+
+/* =========================
+   イントロ（白い全画面にロゴを中央表示）
+   ========================= */
+#intro{
+  position:fixed;
+  inset:0;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  transition:opacity .6s ease;
+  /* 2秒待ってから0.8秒かけてフェードアウト（JSでクラスを付けなくても動く） */
+  animation:introFade .8s ease 2s forwards;
+}
+/* JSで fade-out クラスを付ける場合にも対応 */
+#intro.fade-out{
+  opacity:0;
+  pointer-events:none;
+}
+#intro img{
+  width:min(70vw,420px);
+  height:auto;
+}
+@keyframes introFade{
+  from{opacity:1;visibility:visible}
+  to{opacity:0;visibility:hidden;pointer-events:none}
+}
+
+/* =========================
+   ヘッダー（タイトル＋回転ロゴ）
+   ========================= */
+.site-header{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:128px;
+  padding:0;
+  background:#120c09;
+}
+.header-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand-title{
+  height:64px;
+  width:auto;
+}
+
+/* ロゴ全体の枠（ここは回らない） */
+.brand-logo{
+  position:relative;
+  width:128px;
+  height:128px;
+}
+/* 2枚の画像を枠いっぱいに重ねる */
+.brand-logo img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+/* どんぶり：回転しない（大きさ・位置は微調整用） */
+.logo-bowl{
+  z-index:1;
+  scale:0.6;
+  translate:0 10px;
+}
+/* 模様：この画像だけ回転 */
+.logo-pattern{
+  z-index:2;
+  transform-origin:center;
+  animation:spin 6s linear infinite;
+  scale:1;
+}
+@keyframes spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+/* 動きを減らす設定の人は模様も止める */
+@media (prefers-reduced-motion: reduce){
+  .logo-pattern{animation:none}
+}
+
+/* トップページのヘッダーを画像の上に重ねる */
+.top-header{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  background:transparent;
+  z-index:10;
+  padding:16px 0;
+}
+/* 読みやすさのための上部グラデーション（任意） */
+.top-header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent);
+  z-index:-1;
+  pointer-events:none;
+}
+
+/* =========================
+   ナビ
+   ========================= */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:rgba(14,11,9,.85);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.nav .logo{font-weight:bold;text-decoration:none}
+.nav nav a{margin-left:18px;text-decoration:none;font-size:14px;color:#ddd}
+.nav nav a:hover{color:var(--red)}
+
+/* =========================
+   ヒーロー
+   ========================= */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:120px 24px 80px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,11,9,.95),rgba(14,11,9,.5)),var(--hero-img) center/cover no-repeat,linear-gradient(135deg,#2a1710,#0e0b09)}
+.hero .inner{position:relative;max-width:1140px;margin:0 auto;width:100%}
+.eyebrow{color:var(--red);letter-spacing:.2em;font-size:13px;font-weight:bold}
+.hero h1{font-size:clamp(30px,5vw,56px);margin:10px 0 16px}
+.hero h1 em{font-style:normal;color:var(--red)}
+.hero .lead{color:#d8cfc6;max-width:560px}
+.vtext{position:absolute;right:28px;top:120px;writing-mode:vertical-rl;font-size:clamp(20px,3vw,34px);letter-spacing:.3em;color:rgba(255,255,255,.22);margin:0;font-weight:bold}
+.btn{display:inline-block;padding:12px 26px;border-radius:999px;background:var(--red);color:#fff;text-decoration:none;font-weight:bold;margin:6px 10px 0 0}
+.btn.ghost{background:transparent;border:1px solid #666}
+
+/* =========================
+   共通セクション
+   ========================= */
+section{padding:80px 24px}
+.sec{max-width:1140px;margin:0 auto}
+.sec h2{font-size:28px;margin:0 0 8px}
+.sec .lead{color:var(--muted);margin:0 0 30px}
+
+/* 特徴バー */
+.features{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1140px;margin:0 auto;padding:28px 24px}
+.feat b{color:var(--red);display:block;font-size:15px}
+.feat span{font-size:13px;color:var(--muted)}
+
+/* 不安から探す */
+.anx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.anx{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;text-decoration:none;transition:.2s}
+.anx:hover{border-color:var(--red);transform:translateY(-3px)}
+.anx .q{font-weight:bold;font-size:17px;margin-bottom:6px}
+.anx .a{color:var(--muted);font-size:13px}
+
+/* ジャンル */
+.genre-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.genre{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;text-decoration:none;transition:.2s;min-height:200px}
+.genre:hover{border-color:var(--red);transform:translateY(-3px)}
+.genre img{height:80px;width:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+.genre .name{font-size:18px;font-weight:bold}
+.genre .desc{font-size:13px;color:var(--muted);text-align:center}
+
+/* フィルター */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:24px}
+.chip{background:transparent;border:1px solid #555;color:#ddd;padding:8px 16px;border-radius:999px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff}
+select{background:var(--panel);color:var(--text);border:1px solid #555;border-radius:8px;padding:8px 10px;font-size:14px}
+.count{color:var(--muted);font-size:14px;margin-left:auto}
+
+/* 店舗カード */
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:.2s}
+.card:hover{border-color:var(--red);transform:translateY(-3px)}
+.card .img{position:relative;height:150px;background:#22180f;display:flex;align-items:center;justify-content:center;font-size:44px;flex-direction:column;text-align:center}
+.card .img img{width:100%;height:100%;object-fit:cover}
+.card .ph{font-size:12px;color:var(--muted)}
+.badge{position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-size:12px;padding:3px 10px;border-radius:999px}
+.card .body{padding:16px}
+.card h3{margin:0 0 4px;font-size:17px}
+.addr{font-size:12px;color:var(--muted);margin-bottom:10px}
+.row{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:5px 0;border-top:1px dashed #33271f}
+.row span:first-child{color:var(--muted)}
+.stars{color:#f5b301}
+.ok{color:#7bd389}
+.mid{color:#f5b301}
+.ng{color:#ff6b6b}
+.empty{color:var(--muted)}
+
+/* 入店ガイド */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.step .no{color:var(--red);font-weight:bold;font-size:13px}
+.step h4{margin:4px 0 6px;font-size:16px}
+.step p{margin:0;font-size:13px;color:var(--muted)}
+
+/* FAQ */
+details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:12px}
+summary{cursor:pointer;font-weight:bold}
+details p{color:var(--muted);margin:10px 0 0}
+
+footer{text-align:center;color:var(--muted);font-size:13px;padding:40px 24px;border-top:1px solid var(--line)}
+
+/* =========================
+   下層ページ
+   ========================= */
+.subhero{padding:120px 24px 40px;background:linear-gradient(180deg,#2a1710,#0e0b09);border-bottom:1px solid var(--line)}
+.subhero .inner{max-width:1140px;margin:0 auto}
+.subhero small{color:var(--red);font-weight:bold;letter-spacing:.15em;font-size:12px}
+.subhero h1{margin:6px 0 8px;font-size:clamp(26px,3.4vw,40px)}
+.subhero p{margin:0;color:var(--muted)}
+.back{display:inline-block;margin-bottom:14px;font-size:14px;color:#ddd;text-decoration:none}
+.back:hover{color:var(--red)}
+.wrap{max-width:1140px;margin:0 auto;padding:40px 24px 80px}
+.steps-box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin-bottom:30px}
+.steps-box ol{margin:8px 0 0;padding-left:22px}
+.steps-box li{margin:6px 0;color:#d8cfc6}
+
+/* =========================
+   モーダル
+   ========================= */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+.modal.show{display:flex}
+.modal-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow:auto;position:relative;padding:28px}
+.modal-close{position:absolute;top:10px;right:14px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
+.modal ul{padding-left:20px;color:#d8cfc6;margin:6px 0}
+.meta{color:var(--muted);font-size:14px}
+
+/* =========================
+   入店ガイド（タブ・フォーム）
+   ========================= */
+.tabs{display:flex;gap:8px;margin:16px 0}
+.tab{flex:1;padding:10px;border:1px solid #ccc;background:#fff;border-radius:6px;cursor:pointer}
+.tab.active{background:#e53935;color:#fff;border-color:#e53935}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.guide-form fieldset{border:1px solid #ddd;border-radius:6px;margin-bottom:12px;padding:8px 12px}
+.guide-form label{display:block;padding:4px 0}
+.guide-result ol{padding-left:1.5em;line-height:1.8}
+
+/* =========================
+   スマホ
+   ========================= */
+@media (max-width:860px){
+  .feat-grid,.anx-grid,.steps{grid-template-columns:1fr 1fr}
+  .genre-row{grid-template-columns:1fr}
+  .vtext{display:none}
+  .nav nav{display:none}
+  .count{margin-left:0}
+}
+@media (max-width:520px){
+  .feat-grid,.anx-grid,.steps{grid-template-columns:1fr}
+}

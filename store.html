@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>店舗詳細｜ラーメンナビ</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.block{margin-bottom:44px}
+.block h2{font-size:22px;margin:0 0 16px;padding-left:12px;border-left:4px solid var(--red)}
+
+/* タブ */
+.tabs{display:flex;gap:8px;margin:24px 0 28px}
+.tab{flex:1;padding:12px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--muted);font-size:15px;cursor:pointer}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);font-weight:bold}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.tab-panel > h2{font-size:20px;margin:0 0 16px}
+
+/* 写真 */
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ph{position:relative;background:#22180f;border:1px solid var(--line);border-radius:12px;overflow:hidden;height:220px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;margin:0}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph figcaption{position:absolute;left:0;bottom:0;right:0;padding:6px 10px;background:linear-gradient(transparent,rgba(0,0,0,.7));font-size:12px;color:#fff}
+.ph.main{grid-column:1/-1;height:340px}
+
+/* 表 */
+.info{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.info th,.info td{padding:12px 16px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;vertical-align:top}
+.info th{width:30%;color:var(--muted);font-weight:normal;background:#161110}
+.info tr:last-child th,.info tr:last-child td{border-bottom:0}
+.info .note{display:block;font-size:12px;color:var(--muted)}
+
+/* 地図 */
+.map{height:auto;aspect-ratio:16/10;max-width:100%}
+.map-foot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:14px 0 0;color:#d8cfc6;font-size:14px}
+
+/* フロー */
+.flow{list-style:none;margin:0;padding:0;counter-reset:s}
+.flow li{counter-increment:s;position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px 16px 62px;margin-bottom:12px}
+.flow li::before{content:counter(s);position:absolute;left:16px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;font-weight:bold;display:flex;align-items:center;justify-content:center}
+.flow b{display:block;font-size:16px;margin-bottom:4px}
+.flow span{font-size:14px;color:var(--muted)}
+
+/* 注意点 */
+.cautions{list-style:none;margin:0;padding:0}
+.cautions li{background:var(--panel);border:1px solid var(--line);border-left:4px solid #f5b301;border-radius:10px;padding:14px 18px;margin-bottom:10px;color:#d8cfc6;font-size:14px}
+
+@media(max-width:620px){
+  .gallery{grid-template-columns:1fr}
+  .ph{height:180px}
+  .ph.main{height:240px}
+  .info th{width:38%}
+}
+</style>
+</head>
+<body>
+
+<div class="subhero">
+  <div class="inner">
+    <a class="back" id="back" href="category.html">← 一覧へ戻る</a>
+    <small id="type"></small>
+    <h1 id="name"></h1>
+    <p id="addr"></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- タブ -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="info">基本情報</button>
+    <button class="tab" data-tab="guide">入店〜退店ガイド</button>
+  </nav>
+
+  <!-- 基本情報タブ -->
+  <section id="tab-info" class="tab-panel active">
+
+    <section class="block">
+      <h2>写真</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <section class="block">
+      <h2>基本情報</h2>
+      <table class="info" id="info"></table>
+    </section>
+
+    <section class="block">
+      <h2>メニュー・価格</h2>
+      <table class="info" id="menu"></table>
+    </section>
+
+    <section class="block">
+      <h2>地図</h2>
+      <div class="ph map" id="map"></div>
+      <div class="map-foot">
+        <span id="access"></span>
+        <a class="btn ghost" id="gmap" target="_blank" rel="noopener">Googleマップで開く</a>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- 入店〜退店ガイドタブ -->
+  <section id="tab-guide" class="tab-panel">
+
+    <section class="block">
+      <h2>並びから退店まで</h2>
+      <ol class="flow" id="flow"></ol>
+    </section>
+
+    <section class="block">
+      <h2>気をつけたいこと</h2>
+      <ul class="cautions" id="cautions"></ul>
+    </section>
+
+    <div id="guide-mount"></div>
+
+  </section>
+
+</div>
+
+<footer>© ラーメンナビ ｜ 初めての一杯を、迷わず楽しむためのガイド</footer>
+
+<script src="stores.js"></script>
+<script src="guide.js"></script>
+
+<script>
+/* ===== 店舗詳細データ ===== */
+const DETAIL = {
+  1: {
+    photos: [
+      { src:"images/shop1-1.jpg", cap:"外観" },
+      { src:"images/shop1-2.jpg", cap:"ラーメン" },
+      { src:"images/shop1-3.jpg", cap:"食券機" }
+    ],
+    info: {
+      hours:   "11:00〜22:00",
+      holiday: "なし",
+      seats:   "カウンター 8席　テーブル 6席",
+      tel:     "XXX-XXXX-XXXX",
+      payment: "現金・キャッシュレス（※要確認）",
+      order:   "食券制"
+    },
+    menu: [
+      { name:"雷そば（ミニ）",   price:"920円",  note:"麺量少なめ" },
+      { name:"雷そば（並）",     price:"980円",  note:"基本の量" },
+      { name:"雷そば（中）",     price:"1030円", note:"麺量多め" },
+      { name:"雷そば（大）",     price:"1080円", note:"麺量少なめ" },
+      { name:"雷そば（特）",     price:"1180円", note:"基本の量" },
+      { name:"濃厚雷そば（ミニ）", price:"920円",  note:"麺量少なめ" },
+      { name:"濃厚雷そば（並）",   price:"980円",  note:"基本の量" },
+      { name:"濃厚雷そば（中）",   price:"1030円", note:"麺量多め" },
+      { name:"濃厚雷そば（大）",   price:"1080円", note:"麺量少なめ" },
+      { name:"濃厚雷そば（特）",   price:"1180円", note:"基本の量" },
+      { name:"トッピング",       price:"〇〇〇円", note:"（未入力）" }
+    ],
+    mapImg: "images/map1.png",
+    access: "津田沼駅　徒歩3分",
+    flow: [
+      { t:"到着・列の確認", d:"列の最後尾を探し、係の人がいればその指示に従う。" },
+      { t:"並ぶ", d:"入口付近で待機。店の前で座り込まず、通行の妨げにならないようにする。" },
+      { t:"食券を買う", d:"入口の券売機で基本のラーメンを選ぶ。ボタンを押す前に金額と内容を確認する。" },
+      { t:"入店・着席", d:"店員さんの声かけを待って入る。案内された席に座り、食券を店員さんに渡す。" },
+      { t:"コールに答える", d:"麺の量・野菜・脂・ニンニクなどを聞かれたら答える。聞かれるまで言わなくてOK。" },
+      { t:"食べる", d:"ラーメンが来たら、麺が伸びないうちに早めに食べ進める。" },
+      { t:"食べ終わり・退店", d:"食べ終えたら速やかに席を空け、「ごちそうさまでした」と声をかけて退店する。" }
+    ],
+    cautions: [
+      "食べきれない場合は、食券購入前か着席時に店員さんへ伝える。",
+      "コールは聞かれてから伝える。わからない用語は無理に使わず、「普通でお願いします」でOK。",
+      "店内での会話・撮影は控えめに。撮影は店の許可を確認する。",
+      "混雑時は長居せず、食べ終わったら早めに退店する。",
+      "荷物や会計の忘れ物がないか、席を立つ前に確認する。"
+    ]
+  },
+
+  2: {
+    photos: [
+      { src:"images/shop2-1.jpg", cap:"外観" },
+      { src:"images/shop2-2.jpg", cap:"店内（カウンター席）" },
+      { src:"images/shop2-3.jpg", cap:"食券機" }
+    ],
+    info: {
+      hours:   "11:00〜22:00",
+      holiday: "なし",
+      seats:   "カウンター 8席　テーブル 6席",
+      tel:     "047-411-86x5",
+      payment: "現金 キャッシュ QR など多様",
+      order:   "食券制"
+    },
+    menu: [
+      { name:"ラーメン（小）",  price:"〇〇〇円", note:"麺量少なめ" },
+      { name:"ラーメン（普通）", price:"〇〇〇円", note:"基本の量" },
+      { name:"ラーメン（大）",  price:"〇〇〇円", note:"麺量多め" },
+      { name:"トッピング",     price:"〇〇〇円", note:"（未入力）" }
+    ],
+    mapImg: "images/map2.png",
+    access: "（最寄り駅・徒歩〇分などを入力）",
+    flow: [
+      { t:"到着・列の確認", d:"列の最後尾を探し、係の人がいればその指示に従う。" },
+      { t:"並ぶ", d:"入口付近で待機。店の前で座り込まず、通行の妨げにならないようにする。" },
+      { t:"食券を買う", d:"入口の券売機で基本のラーメンを選ぶ。ボタンを押す前に金額と内容を確認する。" },
+      { t:"入店・着席", d:"店員さんの声かけを待って入る。案内された席に座り、食券を店員さんに渡す。" },
+      { t:"コールに答える", d:"麺の量・野菜・脂・ニンニクなどを聞かれたら答える。聞かれるまで言わなくてOK。" },
+      { t:"食べる", d:"ラーメンが来たら、麺が伸びないうちに早めに食べ進める。" },
+      { t:"食べ終わり・退店", d:"食べ終えたら速やかに席を空け、「ごちそうさまでした」と声をかけて退店する。" }
+    ],
+    cautions: [
+      "食べきれない場合は、食券購入前か着席時に店員さんへ伝える。",
+      "コールは聞かれてから伝える。わからない用語は無理に使わず、「普通でお願いします」でOK。",
+      "店内での会話・撮影は控えめに。撮影は店の許可を確認する。",
+      "混雑時は長居せず、食べ終わったら早めに退店する。",
+      "荷物や会計の忘れ物がないか、席を立つ前に確認する。"
+    ]
+  }
+};
+
+/* ===== 表示処理 ===== */
+const params = new URLSearchParams(location.search);
+const id = Number(params.get("id")) || 2;
+const s = stores.find(x => x.id === id);
+const d = DETAIL[id];
+
+if (!s || !d) {
+  document.querySelector(".wrap").innerHTML = '<p class="empty">店舗情報が見つかりませんでした。</p>';
+} else {
+  document.title = s.name + "｜ラーメンナビ";
+  document.getElementById("type").textContent = s.type;
+  document.getElementById("name").textContent = s.name;
+  document.getElementById("addr").textContent = "📍 " + s.address;
+  document.getElementById("back").href = "category.html?type=" + encodeURIComponent(s.type);
+
+  // 写真
+  document.getElementById("gallery").innerHTML = d.photos.map((p, i) => `
+    <figure class="ph${i === 0 ? " main" : ""}">
+      <span>写真準備中</span>
+      <img src="${esc(p.src)}" alt="${esc(p.cap)}" onerror="this.remove()">
+      <figcaption>${esc(p.cap)}</figcaption>
+    </figure>`).join("");
+
+  // 基本情報
+  const labels = { hours:"営業時間", holiday:"定休日", seats:"席数", tel:"電話番号", payment:"支払い方法", order:"注文方法" };
+  document.getElementById("info").innerHTML =
+    `<tr><th>住所</th><td>${esc(s.address)}</td></tr>` +
+    Object.entries(labels).map(([k, label]) =>
+      `<tr><th>${label}</th><td>${esc(d.info[k])}</td></tr>`).join("");
+
+  // メニュー
+  document.getElementById("menu").innerHTML =
+    `<tr><th>メニュー</th><th style="width:auto">価格</th></tr>` +
+    d.menu.map(m => `
+      <tr>
+        <th style="font-weight:normal;color:var(--text)">${esc(m.name)}<span class="note">${esc(m.note)}</span></th>
+        <td>${esc(m.price)}</td>
+      </tr>`).join("");
+
+  // 地図
+  document.getElementById("map").innerHTML = `
+    <span>地図準備中</span>
+    <img src="${esc(d.mapImg)}" alt="${esc(s.name)}の地図" onerror="this.remove()">`;
+  document.getElementById("access").textContent = "🚉 " + d.access;
+  document.getElementById("gmap").href =
+    "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(s.name + " " + s.address);
+
+  // ガイド（フロー・注意点）
+  document.getElementById("flow").innerHTML = d.flow.map(f =>
+    `<li><b>${esc(f.t)}</b><span>${esc(f.d)}</span></li>`).join("");
+  document.getElementById("cautions").innerHTML = d.cautions.map(c =>
+    `<li>${esc(c)}</li>`).join("");
+}
+
+/* ===== タブ切り替え ===== */
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab, .tab-panel").forEach(el => el.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+  });
+});
+
+/* ===== ガイド描画 ===== */
+renderGuide(id, document.getElementById("guide-mount"));
+</script>
+</body>
+</html>
